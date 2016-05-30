@@ -10,6 +10,9 @@ Red [
 	}
 ]
 
+write-stdout: routine [str [string!]][
+	simple-io/write null as red-value! str null yes no
+]
 
 cos: routine [
 	"Returns the trigonometric cosine"

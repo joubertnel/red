@@ -48,10 +48,11 @@ putwchar: func [
 		if confd = -1 [return WEOF]
 		WriteConsole confd (as byte-ptr! :wchar) 1 :n null
 	][													;-- output to redirection file
-		if wchar = as integer! #"^/" [					;-- convert lf to crlf
-			WriteFile _get_osfhandle fd-stdout (as c-string! :cr) 2 :n 0
-		]
-		WriteFile _get_osfhandle fd-stdout (as c-string! :wchar) 2 :n 0
+		;if wchar = as integer! #"^/" [					;-- convert lf to crlf
+		;	WriteFile _get_osfhandle fd-stdout (as c-string! :cr) 2 :n 0
+		;]
+		;WriteFile _get_osfhandle fd-stdout (as c-string! :wchar) 2 :n 0
+		0
 	]
 	wchar
 ]

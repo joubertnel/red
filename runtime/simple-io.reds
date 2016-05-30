@@ -826,15 +826,19 @@ simple-io: context [
 			mode	[integer!]
 			ret		[integer!]
 	][
-		unless unicode? [		;-- only command line args need to be checked
-			if filename/1 = #"^"" [filename: filename + 1]	;-- FIX: issue #1234
-			len: length? filename
-			if filename/len = #"^"" [filename/len: null-byte]
+		either null? filename [
+			file: stdout
+		][
+			unless unicode? [		;-- only command line args need to be checked
+				if filename/1 = #"^"" [filename: filename + 1]	;-- FIX: issue #1234
+				len: length? filename
+				if filename/len = #"^"" [filename/len: null-byte]
+			]
+			mode: RIO_WRITE
+			if append? [mode: mode or RIO_APPEND]
+			file: open-file filename mode unicode?
+			if file < 0 [return file]
 		]
-		mode: RIO_WRITE
-		if append? [mode: mode or RIO_APPEND]
-		file: open-file filename mode unicode?
-		if file < 0 [return file]
 
 		#either OS = 'Windows [
 			len: 0
@@ -844,7 +848,7 @@ simple-io: context [
 		][
 			ret: _write file data size
 		]
-		close-file file
+		if filename <> null [close-file file]
 		ret
 	]
 
@@ -1035,6 +1039,7 @@ simple-io: context [
 			int  	[red-integer!]
 			limit	[integer!]
 			type	[integer!]
+			name	[c-string!]
 	][
 		limit: -1
 		if OPTION?(part) [
@@ -1060,7 +1065,9 @@ simple-io: context [
 			]
 			true [ERR_EXPECT_ARGUMENT(type 1)]
 		]
-		type: write-file file/to-OS-path filename buf len binary? append? yes
+
+		name: either null? filename [null][file/to-OS-path filename]
+		type: write-file name buf len binary? append? yes
 		if negative? type [
 			fire [TO_ERROR(access cannot-open) filename]
 		]
