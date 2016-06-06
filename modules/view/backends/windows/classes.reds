@@ -78,7 +78,7 @@ register-class: func [
 			as-c-string arg2
 			as-c-string arg1
 			arg7
-			yes
+			no
 	]
 
 	p: ext-cls-tail

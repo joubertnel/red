@@ -308,11 +308,11 @@ ConsoleWndProc: func [
 		rc		[RECT_STRUCT]
 ][
 	vt: as terminal! GetWindowLong hWnd wc-offset - 4
+	v-terminal: as integer! vt
 	switch msg [
 		WM_NCCREATE [
 			p-int: as int-ptr! lParam
 			vt: as terminal! allocate size? terminal!
-			v-terminal: as integer! vt
 			tm: as tagTEXTMETRIC allocate size? tagTEXTMETRIC
 			dc: GetDC hWnd
 			SelectObject dc GetStockObject SYSTEM_FIXED_FONT

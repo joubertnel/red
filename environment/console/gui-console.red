@@ -23,6 +23,12 @@ Red [
 	#include %terminal.reds
 ]
 
+#include %../../../red-scintilla/src/scintilla/api.red
+#include %../../../red-scintilla/src/call/call.red
+#include %../../../red-scintilla/src/tools.red
+#include %../../../red-scintilla/src/editor.red
+
+
 ask: routine [
 	question [string!]
 	return:  [string!]

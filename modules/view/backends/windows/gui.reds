@@ -820,7 +820,18 @@ OS-make-view: func [
 	panel?:	  no
 	alpha?:   no
 	para?:	  TYPE_OF(para) = TYPE_OBJECT
-	
+
+	if TYPE_OF(offset) = TYPE_NONE [
+		offset/header: TYPE_PAIR
+		offset/x: 0
+		offset/y: 0
+	]
+
+	if TYPE_OF(size) = TYPE_NONE [
+		size/header: TYPE_PAIR
+		size/x: 0
+		size/y: 0
+	]
 
 	if all [show?/value sym <> window][flags: flags or WS_VISIBLE]
 	if para? [flags: flags or get-para-flags sym para]
@@ -1029,7 +1040,7 @@ OS-make-view: func [
 			SetWindowLong handle wc-offset - 4 as-integer hWnd
 		]
 		panel? [
-			adjust-parent handle as handle! parent offset/x offset/y
+			adjust-parent handle as handle! parent offset/x offset/y yes
 		]
 		sym = slider [
 			vertical?: size/y > size/x
@@ -1077,7 +1088,7 @@ change-size: func [
 
 	SetWindowPos 
 		hWnd
-		as handle! 0
+		as handle! 1
 		0 0
 		size/x + cx size/y + cy
 		SWP_NOMOVE or SWP_NOZORDER or SWP_NOACTIVATE
@@ -1118,7 +1129,7 @@ change-offset: func [
 		values [red-value!]
 		layer? [logic!]
 ][
-	flags: SWP_NOSIZE or SWP_NOZORDER
+	flags: SWP_NOSIZE or SWP_NOZORDER or SWP_NOACTIVATE
 	pt: declare red-pair!
 
 	if all [not win8+? type = base][
@@ -1132,7 +1143,6 @@ change-offset: func [
 			owner: as handle! GetWindowLong hWnd wc-offset - 16
 			child: as handle! GetWindowLong hWnd wc-offset - 20
 
-			flags: flags or SWP_NOACTIVATE
 			pt/x: pos/x
 			pt/y: pos/y
 			ClientToScreen owner (as tagPOINT pt) + 1

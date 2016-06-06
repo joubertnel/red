@@ -74,6 +74,7 @@ adjust-parent: func [									;-- prevent tabcontrol from having children
 	parent [handle!]
 	x	   [integer!]
 	y	   [integer!]
+	first? [logic!]
 	/local
 		values [red-value!]
 		type   [red-word!]
@@ -83,9 +84,9 @@ adjust-parent: func [									;-- prevent tabcontrol from having children
 	type: as red-word! values + FACE_OBJ_TYPE
 
 	if tab-panel = symbol/resolve type/symbol [
-		SetParent hWnd GetParent parent
+		if first? [SetParent hWnd GetParent parent]
 		pos: as red-pair! values + FACE_OBJ_OFFSET
-		SetWindowPos hWnd null pos/x + x pos/y + y 0 0 SWP_NOSIZE or SWP_NOZORDER
+		SetWindowPos hWnd as handle! 1 pos/x + x pos/y + y 0 0 SWP_NOSIZE or SWP_NOZORDER or SWP_NOACTIVATE
 	]
 ]
 
@@ -213,7 +214,7 @@ update-tab-contents: func [
 				while [obj < tail][
 					if TYPE_OF(obj) = TYPE_OBJECT [
 						hWnd: get-face-handle obj
-						values: get-face-values hWnd
+						values: get-node-facet obj/ctx 0
 						init-panel values parent
 						either type = FACE_OBJ_SIZE [
 							change-size
@@ -221,7 +222,7 @@ update-tab-contents: func [
 								as red-pair! values + FACE_OBJ_SIZE panel
 						][
 							pos: as red-pair! values + FACE_OBJ_OFFSET
-							adjust-parent hWnd parent pos/x pos/y
+							adjust-parent hWnd parent pos/x pos/y no
 						]
 					]
 					obj: obj + 1
@@ -263,7 +264,6 @@ set-tab: func [
 				bool/value: true
 				hWnd: get-face-handle obj
 				show-tab hWnd SW_SHOW
-				BringWindowToTop hWnd
 			]
 		]
 		if all [
