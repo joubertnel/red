@@ -813,7 +813,7 @@ OS-make-view: func [
 	selected: as red-integer!	values + FACE_OBJ_SELECTED
 	para:	  as red-object!	values + FACE_OBJ_PARA
 
-	flags: 	  WS_CHILD or WS_CLIPSIBLINGS
+	flags: 	  WS_CHILD or WS_CLIPCHILDREN ;WS_CLIPSIBLINGS
 	ws-flags: 0
 	id:		  0
 	sym: 	  symbol/resolve type/symbol
