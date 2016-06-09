@@ -264,6 +264,7 @@ set-tab: func [
 				bool/value: true
 				hWnd: get-face-handle obj
 				show-tab hWnd SW_SHOW
+				BringWindowToTop hWnd
 			]
 		]
 		if all [

@@ -590,7 +590,7 @@ show: function [
 	if face/pane [foreach f face/pane [show/with f face]]
 	;check-all-reactions face
 	
-	if all [new? face/type = 'window][
+	if all [new? face/type = 'window face/visible?][
 		system/view/platform/show-window obj
 	]
 ]
