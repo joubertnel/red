@@ -514,7 +514,7 @@ process-command-event: func [
 			]
 		]
 		EN_CHANGE [											;-- sent also by CreateWindow
-			unless any [null? current-msg no-face? hWnd][	;-- ignore CreateWindow-time events
+			unless no-face? hWnd [							;-- ignore CreateWindow-time events
 				unless no-face? child [		  				;-- ignore CreateWindow-time events (fixes #1596)
 					current-msg/hWnd: child	  				;-- force Edit handle
 					make-event current-msg -1 EVT_CHANGE
@@ -815,10 +815,10 @@ WndProc: func [
 		WM_MOVE
 		WM_SIZE [
 			if type = window [
+				if null? current-msg [init-current-msg]
 				state: (as red-block! get-face-values hWnd) + FACE_OBJ_STATE
 				if all [
 					TYPE_OF(state) = TYPE_BLOCK			;-- already created the window
-					current-msg <> null
 					wParam <> SIZE_MINIMIZED
 				][
 					type: either msg = WM_MOVE [FACE_OBJ_OFFSET][FACE_OBJ_SIZE]
