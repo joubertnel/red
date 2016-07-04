@@ -43,6 +43,8 @@ Red/System [
 #include %button.reds
 #include %draw.reds
 
+hDeferWindow:	as handle! 0
+
 exit-loop:		0
 process-id:		0
 border-width:	0
@@ -1186,13 +1188,34 @@ change-offset: func [
 			SetWindowLong hWnd wc-offset - 12 pos/y << 16 or (pos/x and FFFFh)
 		]
 	]
-	SetWindowPos 
-		hWnd
-		as handle! 0
-		pos/x + x pos/y + y
-		0 0
-		flags
+	either hDeferWindow = null [
+		SetWindowPos 
+			hWnd
+			as handle! 0
+			pos/x + x pos/y + y
+			0 0
+			flags
+	][
+		hDeferWindow: DeferWindowPos
+			hDeferWindow
+			hWnd
+			as handle! 0							;-- HWND_TOP
+			pos/x + x pos/y + y
+			0 0
+			flags
+	]
 	if type = tab-panel [update-tab-contents hWnd FACE_OBJ_OFFSET]
+]
+
+begin-update-window: func [n [integer!]][
+	hDeferWindow: BeginDeferWindowPos n
+]
+
+end-update-window: func [hwnd [integer!]][
+	EndDeferWindowPos hDeferWindow
+	ShowWindow as handle! hWnd SW_SHOW
+	UpdateWindow as handle! hWnd
+	hDeferWindow: null
 ]
 
 change-text: func [

@@ -453,6 +453,14 @@ system/view/platform: context [
 		if TYPE_OF(new) = TYPE_NONE [new: null]
 		gui/OS-update-facet owner word value action new index part
 	]
+
+	begin-update-window: routine [nb [integer!]][
+		gui/begin-update-window nb
+	]
+
+	end-update-window: routine [handle [integer!]][
+		gui/end-update-window handle
+	]
 	
 	update-font: routine [font [object!] flags [integer!]][
 		gui/update-font font flags

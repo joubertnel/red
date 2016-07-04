@@ -597,7 +597,11 @@ show: function [
 		face/state: reduce [obj 0 none false]
 	]
 
-	if face/pane [foreach f face/pane [show/with f face]]
+	if face/pane [
+		system/view/platform/begin-update-window length? face/pane
+		foreach f face/pane [show/with f face]
+		system/view/platform/end-update-window face/state/1
+	]
 	;check-all-reactions face
 	
 	if all [new? face/type = 'window face/visible?][
