@@ -32,6 +32,7 @@ Red/System [
 #include %classes.reds
 #include %events.reds
 
+#include %direct2d.reds
 #include %font.reds
 #include %para.reds
 #include %camera.reds
@@ -55,6 +56,7 @@ current-msg: 	as tagMSG 0
 wc-extra:		80										;-- reserve 64 bytes for win32 internal usage (arbitrary)
 wc-offset:		60										;-- offset to our 16+4 bytes
 win8+?:			no
+winxp?:			no
 win-state:		0
 
 log-pixels-x:	0
@@ -412,6 +414,7 @@ init: func [
 		version-info/dwMajorVersion >= 6
 		version-info/dwMinorVersion >= 2
 	]
+	winxp?: version-info/dwMajorVersion < 6
 
 	ver: as red-tuple! #get system/view/platform/version
 
