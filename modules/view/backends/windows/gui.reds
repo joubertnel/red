@@ -276,7 +276,7 @@ update-scrollbars: func [
 	either TYPE_OF(str) = TYPE_STRING [
 		font: as red-object! values + FACE_OBJ_FONT
 		hFont: either TYPE_OF(font) = TYPE_OBJECT [
-			get-font-handle font
+			get-font-handle font 0
 		][
 			GetStockObject DEFAULT_GUI_FONT
 		]
@@ -435,7 +435,8 @@ init: func [
 	
 	log-pixels-x: GetDeviceCaps hScreen 88				;-- LOGPIXELSX
 	log-pixels-y: GetDeviceCaps hScreen 90				;-- LOGPIXELSY
-	
+
+	unless winxp? [DX-init]
 	set-defaults
 ]
 

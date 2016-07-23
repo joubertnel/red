@@ -101,6 +101,7 @@ render-text: func [
 		flags	[integer!]
 		res		[logic!]
 ][
+	unless winxp? [return render-text-d2d values hDC rc]
 	res: false
 	text: as red-string! values + FACE_OBJ_TEXT
 	if TYPE_OF(text) = TYPE_STRING [
